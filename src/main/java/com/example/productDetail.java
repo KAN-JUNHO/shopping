@@ -13,15 +13,10 @@ import java.sql.SQLException;
 public class productDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int proId = Integer.parseInt(request.getParameter("proId"));
-
+        String  proId = request.getParameter("proId");
+        System.out.println("proId:"+proId);
         ProductDAO productDAO = ProductDAO.getInstance();
-        try {
-//            System.out.println(ProductDAO.selectProducts(proId));
-            request.setAttribute("pd", ProductDAO.selectProducts(proId));
-        } catch (SQLException | NamingException e) {
-            throw new RuntimeException(e);
-        }
+        request.setAttribute("pd", productDAO.selectProducts(String.valueOf(proId)));
 
         RequestDispatcher ds = request.getRequestDispatcher("/productDetail.jsp");
         ds.forward(request,response);

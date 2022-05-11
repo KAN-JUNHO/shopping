@@ -6,6 +6,7 @@ import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -14,14 +15,18 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @WebServlet(name = "Order", value = "/Order")
 public class Order extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String proId = request.getParameter("proId");
+        System.out.println("proId order:"+proId);
+        ProductDAO productDAO = ProductDAO.getInstance();
 
-
+        request.setAttribute("pl", productDAO.selectProducts(proId));
+        System.out.println(productDAO.selectProducts(proId));
     }
 
     @Override
@@ -46,7 +51,7 @@ public class Order extends HttpServlet {
             Products products = new Products(proId,proName,unitPrice,description,manufacturer,category,noOfStock);
 
             System.out.println("bbbbb");
-            ProductDAO.insertProducts(products);
+            productDAO.insertProducts(products);
 
         } catch (Exception e) {
             System.out.println("모름 에러임");

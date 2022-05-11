@@ -15,12 +15,14 @@ import java.util.ArrayList;
 public class ProductDAO {
     private static ProductDAO dao = new ProductDAO();
 
-    public ProductDAO() {}
+    public ProductDAO() {
+    }
 
 
-    public static ProductDAO getInstance(){
+    public static ProductDAO getInstance() {
         return dao;
     }
+
     public Connection getConnection() throws NamingException, SQLException {
 
         InitialContext ic = new InitialContext();
@@ -31,13 +33,16 @@ public class ProductDAO {
 
         return conn;
     }
+
     public void close(Connection conn, PreparedStatement pstmt, ResultSet rs) throws SQLException {
         conn.close();
     }//연결 닫기
+
     public void close(Connection conn, PreparedStatement pstmt) throws SQLException {
         conn.close();
     }//연결 닫기
-    public static ArrayList<Products> selectProductAll() throws SQLException, NamingException {
+
+    public ArrayList<Products> selectProductAll() throws SQLException, NamingException {
         Connection conn = dao.getConnection();
         String sql = "SELECT * FROM Products";
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -58,41 +63,47 @@ public class ProductDAO {
 
         return list;
     } //모든 멤버 조회
-    public static Products selectProducts(int proId) throws SQLException, NamingException {
 
-        Connection conn = dao.getConnection();
-        String sql = "SELECT * FROM Products WHERE proId=?";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(1, proId);
-        ResultSet rs = pstmt.executeQuery();
+    public Products selectProducts(String proId) {
+            Products products = null;
 
-        Products products = null;
-        while (rs.next()) {
-            products = new Products();
-            products.setProId(rs.getString(1));
-            products.setProName(rs.getString(2));
-            products.setUnitPrice(rs.getInt(3));
-            products.setDescription(rs.getString(4));
-            products.setManufacturer(rs.getString(5));
-            products.setCategory(rs.getString(6));
-            products.setNoOfStock(rs.getInt(7));
-        }
+        try {
+            Connection conn = dao.getConnection();
+            String sql = "SELECT * FROM Products WHERE proId=?";
+            PreparedStatement pstmt = null;
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, proId);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                products = new Products();
+                products.setProId(rs.getString(1));
+                products.setProName(rs.getString(2));
+                products.setUnitPrice(rs.getInt(3));
+                products.setDescription(rs.getString(4));
+                products.setManufacturer(rs.getString(5));
+                products.setCategory(rs.getString(6));
+                products.setNoOfStock(rs.getInt(7));
+            }
         System.out.println(products);
+        } catch (SQLException | NamingException e) {
+            System.out.println("selectProducts error: "+ e.getMessage());
+        }
         return products;
     }
 
-    public static int insertProducts(Products dto) throws SQLException, NamingException {
+    public int insertProducts(Products dto) throws SQLException, NamingException {
         Connection conn = dao.getConnection();
         System.out.println("inserting before");
         String sql = "insert into Products values(?, ?, ?, ?, ?,?,?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, dto.getProId());
-        pstmt.setString(2,dto.getProName());
-        pstmt.setInt(3,dto.getUnitPrice());
-        pstmt.setString(4,dto.getDescription());
-        pstmt.setString(5,dto.getManufacturer());
-        pstmt.setString(6,dto.getCategory());
-        pstmt.setInt(7,dto.getNoOfStock());
+        pstmt.setString(2, dto.getProName());
+        pstmt.setInt(3, dto.getUnitPrice());
+        pstmt.setString(4, dto.getDescription());
+        pstmt.setString(5, dto.getManufacturer());
+        pstmt.setString(6, dto.getCategory());
+        pstmt.setInt(7, dto.getNoOfStock());
         int rs = pstmt.executeUpdate();
         System.out.println("inserting before2");
         return rs;

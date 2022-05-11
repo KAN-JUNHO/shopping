@@ -17,7 +17,7 @@ public class ProductList extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ProductDAO productDAO = ProductDAO.getInstance();
         try {
-            request.setAttribute("pl", ProductDAO.selectProductAll());
+            request.setAttribute("pl", productDAO.selectProductAll());
         } catch (SQLException | NamingException e) {
             System.out.println("ero");
             throw new RuntimeException(e);

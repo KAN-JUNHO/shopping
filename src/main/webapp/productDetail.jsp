@@ -23,6 +23,7 @@
 </head>
 <body>
     <jsp:include page="menu.jsp"/>
+
   <div class="col-md-6">
 <%--      <c:forEach var="product" items="${pd}">--%>
 <%--          <div class="col-md-4">--%>
@@ -39,7 +40,7 @@
 <%--      </c:forEach>--%>
 
       <p>
-          <a href="/Order?proId="${pd.proId} class="btn btn-info">상품 주문</a>
+          <a href="/Order?proId=${pd.proId}" class="btn btn-info">상품 주문</a>
           <a href="/productList" class="btn btn-secondary">
               상품 목록 &raquo;
           </a>
